@@ -1,6 +1,9 @@
 # Created by https://www.toptal.com/developers/gitignore/api/nextjs,node,macos,windows,linux
 # Edit at https://www.toptal.com/developers/gitignore?templates=nextjs,node,macos,windows,linux
 
+volumes/neo4j
+volumes/redis
+
 ### Linux ###
 *~
 

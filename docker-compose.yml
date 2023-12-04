@@ -1,0 +1,19 @@
+version: '3.9'
+name: 'song-recommendation-app'
+services:
+  neo4j:
+    name: 'neo4j'
+    image: neo4j:latest
+    ports:
+      - 7474:7474
+      - 7687:7687
+    environment:
+      NEO4J_AUTH: $NEO4J_USER/$NEO4J_PASSWORD
+    volumes:
+      - ./volumes/neo4j/data:/data
+
+  redis:
+    name: 'redis'
+    image: redis:latest
+    volumes:
+      - ./volumes/redis/data:/data
