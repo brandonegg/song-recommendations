@@ -12,19 +12,17 @@ with open(PATH_TO_SONG_DATA, newline='', encoding='utf-8') as csvfile:
     index_name = 'songs_index'
 
     # Creating the Redis Search index
-    # FT.CREATE songs_index ON JSON SCHEMA $.id AS id TEXT $.name AS name TEXT $.artists AS artists TAG
+    # FT.CREATE songs_index ON JSON SCHEMA $.id AS id TEXT $.name AS name TEXT $.artists AS artists TEXT
     r.execute_command("FT.DROPINDEX", index_name)
-    r.execute_command("FT.CREATE", index_name, "ON", "JSON", "PREFIX" ,"1", "item:", "SCHEMA", "$.id", "AS", "id", "TEXT", "$.name", "AS", "name", "TEXT", "$.artists", "AS", "artists", "TAG")
+    r.execute_command("FT.CREATE", index_name, "ON", "JSON", "PREFIX" ,"1", "item:", "SCHEMA", "$.id", "AS", "id", "TEXT", "$.name", "AS", "name", "TEXT", "$.artists", "AS", "artists", "TEXT")
     print("Command Executed")
     # Importing data into the created index
     count = 1
     for row in reader:
-        print("Test")
         track_id = row['id']
         track_name = row['name']
-        artists = row['artists']
+        artists = row['artists'].replace("[", "").replace("]", "").replace("'", "")
         artist_ids = row['artist_ids']
-
         # Convert row to JSON format including lists
         json_data = {
             'id': track_id,
