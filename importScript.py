@@ -1,5 +1,5 @@
 #Import script to import ColumnIds and create Song Node linking all the property keys together
-
+import os
 import pandas as pd
 from neo4j import GraphDatabase
 
@@ -46,8 +46,8 @@ def importData(tx, data):
         )
 
 uri = "bolt://localhost:7687"  
-user = "neo4j"          
-password = "MDBproject"      
+user = os.environ.get("NEO4J_USER", "neo4j")
+password = os.environ.get("NEO4J_PASSWORD", "MDBproject")   
 
 #Note -> Path will need to change per person
 filePath = "C:/Users/Gokes/.Neo4jDesktop/relate-data/dbmss/dbms-98a65315-2d6d-4cc2-abab-46b7e16aa436/import/tracks_features.csv"
