@@ -12,7 +12,7 @@ services:
       - ./volumes/neo4j/data:/data
 
   redis:
-    image: redis:latest
+    image: redislabs/redisearch:latest
     environment:
       REDIS_PASSWORD: $REDIS_PASSWORD
     ports:
