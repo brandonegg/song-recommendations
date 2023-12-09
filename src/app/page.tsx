@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { SearchBar } from "./components/search-bar";
 import { SongLineItem } from "./components/song-line-item";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { SearchResponse, SearchResponseSchema } from "@/lib/schemas/responses/search";
 
 export default function Home() {
   const searchParams = useSearchParams();
@@ -11,14 +12,14 @@ export default function Home() {
 
   const searchQuery = searchParams.get("query");
 
-  const [data, setData] = useState(null);
+  const [searchData, setSearchData] = useState<SearchResponse | null>(null);
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch(`/api/search?query=${searchQuery}`)
       .then((res) => res.json())
       .then((data) => {
-        setData(data);
+        setSearchData(SearchResponseSchema.parse(data));
         setLoading(false);
       });
   }, []);
@@ -48,8 +49,10 @@ export default function Home() {
 
         <div className="h-[1px] mx-auto w-full max-w-[300px] bg-gray-100/10" />
 
-        <div className="pt-8 w-full max-w-[400px] mx-auto">
-          <SongLineItem onClick={undefined} />
+        <div className="pt-8 w-full max-w-[400px] mx-auto space-y-2">
+          {searchData?.results.map((song, i) => {
+          return (<SongLineItem key={i} onClick={undefined} />)
+          })}
         </div>
       </div>
     </main>
