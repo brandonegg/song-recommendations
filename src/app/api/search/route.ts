@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
   const result = await redis.call(
     "ft.search",
     "songs_index",
-    `@name: %%%${query}%%%`,
+    `@artists:${query} | @name:${query}`,
     "LIMIT",
     0,
     10,

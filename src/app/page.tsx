@@ -11,20 +11,31 @@ export default function Home() {
   const pathname = usePathname();
 
   const searchQuery = searchParams.get("query");
+  const [searchValue, setSearchValue] = useState<string | null>(searchQuery);
 
   const [searchData, setSearchData] = useState<SearchResponse | null>(null);
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`/api/search?query=${searchQuery}`)
-      .then((res) => res.json())
-      .then((data) => {
+    fetch(`/api/search?query=${searchValue}`)
+      .then((res) => {
+        if (res.status === 200) {
+          return res.json()
+        }
+
+        return null;
+      })
+      .then((data: any | null) => {
+        if (!data) {
+          return;
+        }
         setSearchData(SearchResponseSchema.parse(data));
         setLoading(false);
       });
-  }, []);
+  }, [searchValue]);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value)
     const current = new URLSearchParams(Array.from(searchParams.entries()));
     const value = e.target.value.trim();
 
@@ -44,14 +55,14 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center justify-between">
       <div className="p-32 flex flex-col">
         <div className="pb-8">
-          <SearchBar value={searchQuery ?? ""} onChange={onChange} />
+          <SearchBar value={searchValue ?? ""} onChange={onChange} />
         </div>
 
         <div className="h-[1px] mx-auto w-full max-w-[300px] bg-gray-100/10" />
 
         <div className="pt-8 w-full max-w-[400px] mx-auto space-y-2">
           {searchData?.results.map((song, i) => {
-          return (<SongLineItem key={i} onClick={undefined} />)
+          return (<SongLineItem {...song} key={i} onClick={undefined} />)
           })}
         </div>
       </div>
