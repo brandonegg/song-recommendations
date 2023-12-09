@@ -5,5 +5,9 @@
 body {
   color: rgb(var(--foreground-rgb));
   backdrop-filter: brightness(25%);
-  background: radial-gradient(circle, rgba(63,78,251,1) 0%, rgba(252,70,107,1) 100%);
+  background: radial-gradient(
+    circle,
+    rgba(63, 78, 251, 1) 0%,
+    rgba(252, 70, 107, 1) 100%
+  );
 }

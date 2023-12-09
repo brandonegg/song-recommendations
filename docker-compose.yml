@@ -1,5 +1,5 @@
-version: '3.9'
-name: 'song-recommendation-app'
+version: "3.9"
+name: "song-recommendation-app"
 services:
   neo4j:
     image: neo4j:latest
