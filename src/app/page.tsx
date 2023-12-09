@@ -62,7 +62,7 @@ export default function Home() {
 
         <div className="pt-8 w-full max-w-[450px] mx-auto space-y-3">
           {searchData?.results.map((song, i) => {
-          return (<SongLineItem {...song} key={i} onClick={undefined} />)
+          return (<SongLineItem {...song} key={i} onClick={() => {console.log('clicked')}} />)
           })}
         </div>
       </div>
