@@ -33,8 +33,8 @@ export const SongLineItem = ({
           </div>
         </div>
 
-        <div className="my-auto rounded-xl bg-black/10 flex flex-row items-center px-4 py-2 space-x-2">
-          <UserIcon className="h-[20px] text-gray-100/50" />
+        <div className="shrink-0 relative w-[150px] overflow-hidden whitespace-nowrap flex-nowrap my-auto rounded-xl bg-black/10 flex flex-row items-center px-3 py-2 space-x-2">
+          <UserIcon className="shrink-0 h-[20px] text-gray-100/50" />
           <p className="text-sm text-gray-100/75">{artists[0] ?? 'None'}</p>
         </div>
       </div>

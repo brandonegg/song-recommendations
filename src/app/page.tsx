@@ -60,7 +60,7 @@ export default function Home() {
 
         <div className="h-[1px] mx-auto w-full max-w-[300px] bg-gray-100/10" />
 
-        <div className="pt-8 w-full max-w-[400px] mx-auto space-y-2">
+        <div className="pt-8 w-full max-w-[450px] mx-auto space-y-3">
           {searchData?.results.map((song, i) => {
           return (<SongLineItem {...song} key={i} onClick={undefined} />)
           })}
