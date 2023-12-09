@@ -20,6 +20,9 @@ const config: Config = {
           300: "#696969",
         },
       },
+      dropShadow: {
+        left: "-7px 0px 22px #000000",
+      },
     },
   },
   plugins: [],

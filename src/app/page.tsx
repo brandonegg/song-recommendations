@@ -110,9 +110,9 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between">
-      <div className="flex flex-row h-full w-full overflow-hidden">
-        <div className="p-32 flex flex-col h-full overflow-y-auto">
-          <div className="pb-8">
+      <div className="flex flex-row h-screen w-full overflow-hidden">
+        <div className="w-[60%] py-32 flex flex-col h-full overflow-y-auto">
+          <div className="pb-8 mx-auto">
             <SearchBar value={searchValue ?? ""} onChange={onChange} />
           </div>
 
@@ -127,8 +127,8 @@ export default function Home() {
           ) : null}
         </div>
 
-        <div className="h-full">
-            <CurationSidebar />
+        <div className="h-full w-[40%]">
+          <CurationSidebar />
         </div>
       </div>
     </main>
