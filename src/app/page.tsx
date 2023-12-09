@@ -3,7 +3,10 @@ import { useEffect, useState } from "react";
 import { SearchBar } from "./components/search-bar";
 import { SongLineItem } from "./components/song-line-item";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { SearchResponse, SearchResponseSchema } from "@/lib/schemas/responses/search";
+import {
+  SearchResponse,
+  SearchResponseSchema,
+} from "@/lib/schemas/responses/search";
 
 export default function Home() {
   const searchParams = useSearchParams();
@@ -20,7 +23,7 @@ export default function Home() {
     fetch(`/api/search?query=${searchValue}`)
       .then((res) => {
         if (res.status === 200) {
-          return res.json()
+          return res.json();
         }
 
         return null;
@@ -35,7 +38,7 @@ export default function Home() {
   }, [searchValue]);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchValue(e.target.value)
+    setSearchValue(e.target.value);
     const current = new URLSearchParams(Array.from(searchParams.entries()));
     const value = e.target.value.trim();
 
@@ -62,7 +65,15 @@ export default function Home() {
 
         <div className="pt-8 w-full max-w-[450px] mx-auto space-y-3">
           {searchData?.results.map((song, i) => {
-          return (<SongLineItem {...song} key={i} onClick={() => {console.log('clicked')}} />)
+            return (
+              <SongLineItem
+                {...song}
+                key={i}
+                onClick={() => {
+                  console.log("clicked");
+                }}
+              />
+            );
           })}
         </div>
       </div>

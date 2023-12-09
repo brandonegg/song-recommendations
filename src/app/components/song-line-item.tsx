@@ -7,25 +7,26 @@ export const SongLineItem = ({
   onClick,
   name,
   artists,
-  album
+  album,
 }: {
   onClick: (() => void) | undefined;
-} & SearchResponse['results'][0]) => {
+} & SearchResponse["results"][0]) => {
   const ConditionalButton = ({ children }: PropsWithChildren) => {
     if (onClick) {
       return (
-        <button className="overflow-hidden border hover:border-white/50 border-transparent relative group rounded-2xl w-full hover:bg-white/50 transition-all duration-100" onClick={onClick}>
+        <button
+          className="overflow-hidden border hover:border-white/50 border-transparent relative group rounded-2xl w-full hover:bg-white/50 transition-all duration-100"
+          onClick={onClick}
+        >
           <div className="z-10 hidden group-hover:block absolute inset-0">
             <div className="grid place-items-center w-full h-full">
               <div className="w-fit flex flex-row items-center space-x-2">
-              <p className="text-blue-900/75 font-bold">add to curation</p>
-              <PlusCircleIcon className="w-5 h-5 text-blue-900/75"/>
+                <p className="text-blue-900/75 font-bold">add to curation</p>
+                <PlusCircleIcon className="w-5 h-5 text-blue-900/75" />
               </div>
             </div>
           </div>
-          <div className="group-hover:blur-[4px]">
-            {children}
-          </div>
+          <div className="group-hover:blur-[4px]">{children}</div>
         </button>
       );
     }
@@ -46,7 +47,7 @@ export const SongLineItem = ({
 
         <div className="shrink-0 relative w-[150px] overflow-hidden whitespace-nowrap flex-nowrap my-auto rounded-xl bg-black/10 flex flex-row items-center px-3 py-2 space-x-2">
           <UserIcon className="shrink-0 h-[20px] text-gray-100/50" />
-          <p className="text-sm text-gray-100/75">{artists[0] ?? 'None'}</p>
+          <p className="text-sm text-gray-100/75">{artists[0] ?? "None"}</p>
         </div>
       </div>
     </ConditionalButton>
