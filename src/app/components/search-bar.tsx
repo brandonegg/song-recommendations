@@ -11,13 +11,13 @@ export const SearchButton = () => {
   );
 };
 
-export const SearchBar = () => {
-  const [value, setValue] = useState<string | undefined>();
-
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
-  };
-
+export const SearchBar = ({
+  onChange,
+  value,
+}: {
+  onChange: React.ChangeEventHandler<HTMLInputElement>;
+  value: string;
+}) => {
   return (
     <div className="relative mx-2">
       <input
