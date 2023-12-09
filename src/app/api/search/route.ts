@@ -4,13 +4,18 @@ import { NextRequest, NextResponse } from "next/server";
 const MAX_LEV = 3;
 const LIMIT = 10;
 
-export const searchRedis = async (levDist: number, limit: number, query: string) => {
+export const searchRedis = async (
+  levDist: number,
+  limit: number,
+  query: string,
+) => {
   const result = await redis.call(
     "ft.search",
     "songs_index",
-    `@artists:${"%".repeat(levDist)}${query}${"%".repeat(
-      levDist,
-    )} | @name:${"%".repeat(levDist)}${query}${"%".repeat(levDist)}`,
+    `@name|artists:(${"%".repeat(levDist)}${query.replaceAll(
+      " ",
+      "|",
+    )}${"%".repeat(levDist)})`,
     "LIMIT",
     0,
     limit,
@@ -50,7 +55,7 @@ export async function GET(request: NextRequest) {
   const results = [];
 
   for (let i = 0; i < MAX_LEV; i++) {
-    const redisMatches = await searchRedis(i, LIMIT, query ?? '');
+    const redisMatches = await searchRedis(i, LIMIT, query ?? "");
     const newLen = results.push(...redisMatches.results);
 
     if (newLen >= LIMIT) {
@@ -58,8 +63,11 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  return NextResponse.json({
-    count: results.length,
-    results: results,
-  }, {status: 200})
+  return NextResponse.json(
+    {
+      count: results.length,
+      results: results,
+    },
+    { status: 200 },
+  );
 }
