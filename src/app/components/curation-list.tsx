@@ -1,6 +1,5 @@
 import { getCurationUsingCookie } from "@/lib/queries/curation";
 import { SongLineItem } from "./song-line-item";
-import { CurationSidebar } from "./curation-sidebar";
 import { GenerateButton } from "./generate-button";
 
 export default async function CurationList({}: {}) {
