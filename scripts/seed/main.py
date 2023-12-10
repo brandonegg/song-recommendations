@@ -1,5 +1,5 @@
 from redis_import import create_song_search_table, clear_song_table
-from neo4j_import import create_song_nodes, remove_song_nodes
+from neo4j_import import create_song_nodes, create_similarity_relation
 
 if __name__ == "__main__":
     print("Initializing & seeding Redis DB...")
@@ -9,4 +9,5 @@ if __name__ == "__main__":
 
     print("Creating neo4j song nodes...")
     create_song_nodes()
+    create_similarity_relation()
     print("Neo4J seeding complete!")
