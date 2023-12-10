@@ -1,4 +1,7 @@
 # Song Recommendations
+<p align="center">
+  <img src="docs/title_image.png" width="500" />
+</p>
 
 The ultimate song curation and recommendation engine trained on 1.2 million songs from Spotify! This application was developed for our final project in Modern Databases at the University of Iowa.
 
