@@ -105,6 +105,10 @@ export const searchSongs = async (query: string, limit: number) => {
 };
 
 export async function findByIds(ids: string[]) {
+  if (ids.length === 0) {
+    return [];
+  }
+
   const result = await redis.call(
     "ft.search",
     "songs_index",

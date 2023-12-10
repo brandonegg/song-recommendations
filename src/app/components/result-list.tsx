@@ -19,7 +19,7 @@ export default async function ResultList({ query }: { query: string }) {
       ) : (
         <div className="pt-8 w-full max-w-[450px] mx-auto space-y-3">
           {search.results.map((song, i) => {
-            return <SongLineItem {...song} key={i} showAddToCuration />;
+            return <SongLineItem {...song} key={i} action="add-to-curation" />;
           })}
         </div>
       )}

@@ -8,7 +8,9 @@ export default async function CurationList({}: {}) {
     <>
       <div className="pt-8 w-full max-w-[450px] mx-auto space-y-3">
         {curationList.map((song, i) => {
-          return <SongLineItem {...song} key={i} showAddToCuration={false} />;
+          return (
+            <SongLineItem {...song} key={i} action="remove-from-curation" />
+          );
         })}
       </div>
     </>
