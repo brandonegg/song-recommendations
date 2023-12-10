@@ -68,3 +68,32 @@ def create_song_nodes():
             for i in range(0, len(spotify_data), BATCH_SIZE):
                 batch_data = spotify_data.iloc[i:i+BATCH_SIZE]
                 session.write_transaction(create_nodes, batch_data)
+
+def similarityRelation():
+    with neo_connect() as driver:
+        with driver.session() as session:
+            # Project graph and scale properties
+            session.run('CALL gds.graph.project("SongGraph", "Song", "*",'
+                        '{nodeProperties:["danceability", "energy", "loudness", "key", "mode", '
+                        '"speechiness", "acousticness", "instrumentalness", "liveness", "valence", "tempo"]})')
+            #MinMax to normalize 0,1
+            session.run('CALL gds.scaleProperties.mutate("SongGraph",'
+                        '{nodeProperties: ["danceability", "energy", "loudness", "key", "mode", '
+                        '"speechiness", "acousticness", "instrumentalness", "liveness", "valence", "tempo"], '
+                        'scaler:"MinMax", mutateProperty: "scaledProperties"}) YIELD nodePropertiesWritten')
+
+            # KNN 
+            session.run('CALL gds.knn.stats("SongGraph",'
+                        '{nodeProperties:{scaledProperties:"EUCLIDEAN"}, topK:15, sampleRate:1, randomSeed:42, concurrency:1}) '
+                        'YIELD similarityDistribution RETURN similarityDistribution')
+
+            # Create Euclidean distance similarity relation
+            session.run('CALL gds.knn.mutate("SongGraph",'
+                        '{nodeProperties: {scaledProperties: "EUCLIDEAN"}, topK: 15, mutateRelationshipType: "IS_SIMILAR",'
+                        'mutateProperty: "similarity", similarityCutoff: 0.7620086669921875, sampleRate:1, randomSeed:42, concurrency:1})')
+
+            # Write the projection graph relationship IS_SIMILAR to graph
+            session.run('CALL gds.graph.writeRelationship("SongGraph", "IS_SIMILAR", "similarity")')
+
+create_song_nodes()
+similarityRelation()
