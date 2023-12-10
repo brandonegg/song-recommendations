@@ -9,6 +9,8 @@ services:
     environment:
       NEO4J_AUTH: $NEO4J_USER/$NEO4J_PASSWORD
       NEO4J_PLUGINS: '["graph-data-science","apoc"]'
+      NEO4J_server_memory_pagecache_size: 3G
+      NEO4J_server_memory_heap_max__size: 9G
     volumes:
       - ./volumes/neo4j/data:/data
 
