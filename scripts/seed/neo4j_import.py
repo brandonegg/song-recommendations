@@ -2,17 +2,32 @@
 import os
 import pandas as pd
 from neo4j import GraphDatabase
+from dotenv import dotenv_values
 
-#This helped with memory allocation lol
-BATCH_SIZE = 1000  
+dir_path = os.path.dirname(os.path.realpath(__file__))
+config = dotenv_values(os.path.join(dir_path, "../../.env"))
+
+BATCH_SIZE = 1000
+DATA_PATH = config["DATA_PATH"]
+NEO4J_PASSWORD = config["NEO4J_PASSWORD"]
+NEO4J_USER = config["NEO4J_USER"]
+NEO4J_URI = "bolt://localhost:7687"
+
+def remove_song_nodes():
+    def delete_all_songs(tx):
+        tx.run("MATCH (s:Song)\n"
+               "DETACH DELETE s;")
+
+    with neo_connect() as driver:
+        with driver.session() as session:
+            session.write_transaction(delete_all_songs)
 
 #Driver (Just in case, but you can probably hardcode this)
-def login(uri, user, password):
-    return GraphDatabase.driver(uri, auth=(user, password))
+def neo_connect():
+    return GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD))
 
-#Import method for all columns
-def importData(tx, data):
-    for index, row in data.iterrows():
+def create_nodes(tx, data):
+    for _, row in data.iterrows():
         tx.run(
             '''
             CREATE (s:Song {
@@ -45,18 +60,11 @@ def importData(tx, data):
             **row.to_dict()
         )
 
-uri = "bolt://localhost:7687"  
-user = os.environ.get("NEO4J_USER", "neo4j")
-password = os.environ.get("NEO4J_PASSWORD", "MDBproject")   
+def create_song_nodes():
+    spotify_data = pd.read_csv(DATA_PATH)
 
-#Note -> Path will need to change per person
-filePath = "C:/Users/Gokes/.Neo4jDesktop/relate-data/dbmss/dbms-98a65315-2d6d-4cc2-abab-46b7e16aa436/import/tracks_features.csv"
-spotifyData = pd.read_csv(filePath)
-
-with login(uri, user, password) as driver:
-    with driver.session() as session:
-        for i in range(0, len(spotifyData), BATCH_SIZE):
-            batch_data = spotifyData.iloc[i:i+BATCH_SIZE]
-            session.write_transaction(importData, batch_data)
-
-print("Imported")
+    with neo_connect() as driver:
+        with driver.session() as session:
+            for i in range(0, len(spotify_data), BATCH_SIZE):
+                batch_data = spotify_data.iloc[i:i+BATCH_SIZE]
+                session.write_transaction(create_nodes, batch_data)

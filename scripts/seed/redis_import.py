@@ -7,15 +7,16 @@ from dotenv import dotenv_values
 dir_path = os.path.dirname(os.path.realpath(__file__))
 config = dotenv_values(os.path.join(dir_path, "../../.env"))
 
-# Creating the Redis Search index
-# FT.CREATE songs_index ON JSON SCHEMA $.id AS id TEXT $.name AS name TEXT $.artists AS artists TEXT
-# r.execute_command("FT.DROPINDEX", index_name)
-
 DATA_PATH=config["DATA_PATH"]
 REDIS_PASSWORD=config["REDIS_PASSWORD"]
 REDIS_HOST='localhost'
 REDIS_PORT=6379
 REDIS_DB=0
+SONG_INDEX='songs_index'
+
+def clear_song_table():
+    r_driver = redis.StrictRedis(host='localhost', port=6379, db=0)
+    r_driver.execute_command("FT.DROPINDEX", SONG_INDEX)
 
 def create_song_search_table():
     print("Connecting to redis DB...")
@@ -27,7 +28,7 @@ def create_song_search_table():
 
     with open(DATA_PATH, newline='', encoding='utf-8') as csvfile:
         reader = csv.DictReader(csvfile)
-        index_name = 'songs_index'
+        index_name = SONG_INDEX
 
         print("Creating search index")
         r_driver.execute_command("FT.CREATE", index_name, "ON", "JSON", "PREFIX" ,"1", "item:", "SCHEMA", "$.id", "AS", "id", "TEXT", "$.name", "AS", "name", "TEXT", "$.artists", "AS", "artists", "TEXT", "$.album", "AS", "album", "TEXT")
