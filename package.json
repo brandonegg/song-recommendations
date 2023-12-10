@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "format": "npx prettier . --write",
-    "docker:up": "docker compose up --build --detach"
+    "docker:up": "docker compose up --build --detach",
+    "seed": "python scripts/seed/main.py"
   },
   "dependencies": {
     "@heroicons/react": "^2.0.18",
