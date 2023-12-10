@@ -57,3 +57,7 @@ Once data has been seeded successfully, you are all set to start playing around 
 - *volumes:*
 
    Volumes is where docker containers mount on your local file system. Redis & Neo4J data is stored here. This data should not be checked into version control.
+
+- *docs:*
+
+   Resources related to the README.md (mostly images referenced)
