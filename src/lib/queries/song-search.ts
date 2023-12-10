@@ -1,7 +1,6 @@
 import redis from "@/lib/redis";
 import { cookies } from "next/headers";
 import { z } from "zod";
-import { getCurationUsingCookie } from "./curation";
 
 const MAX_LEV = 3;
 const LIMIT = 10;
