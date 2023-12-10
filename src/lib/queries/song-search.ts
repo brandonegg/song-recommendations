@@ -1,5 +1,7 @@
 import redis from "@/lib/redis";
+import { cookies } from "next/headers";
 import { z } from "zod";
+import { getCurationUsingCookie } from "./curation";
 
 const MAX_LEV = 3;
 const LIMIT = 10;
@@ -50,11 +52,15 @@ const searchNameArtist = async (
   levDist: number,
   limit: number,
   query: string,
+  ignoreIds: string[],
 ) => {
+  const ignorIdsStr =
+    ignoreIds.length > 0 ? ` -@id:(${ignoreIds.join("|")})` : "";
+
   const result = await redis.call(
     "ft.search",
     "songs_index",
-    `@name|artists:(${makeConditionalString(query, levDist)})`,
+    `@name|artists:(${makeConditionalString(query, levDist)})${ignorIdsStr}`,
     "LIMIT",
     0,
     limit,
@@ -74,6 +80,12 @@ const searchNameArtist = async (
 };
 
 export const searchSongs = async (query: string, limit: number) => {
+  const ignoreIds: string[] = [];
+  const curationUuid = cookies().get("curation_uuid")?.value;
+  if (curationUuid) {
+    ignoreIds.push(...(await redis.smembers(`curation:${curationUuid}`)));
+  }
+
   query = query.trim();
   const results: SongDetails[] = [];
 
@@ -85,7 +97,12 @@ export const searchSongs = async (query: string, limit: number) => {
   }
 
   for (let i = 0; i < MAX_LEV; i++) {
-    const redisMatches = await searchNameArtist(i, LIMIT, query ?? "");
+    const redisMatches = await searchNameArtist(
+      i,
+      LIMIT,
+      query ?? "",
+      ignoreIds,
+    );
     const newLen = results.push(...redisMatches.results);
 
     if (newLen >= LIMIT) {

@@ -1,5 +1,7 @@
 import { getCurationUsingCookie } from "@/lib/queries/curation";
 import { SongLineItem } from "./song-line-item";
+import { CurationSidebar } from "./curation-sidebar";
+import { GenerateButton } from "./generate-button";
 
 export default async function CurationList({}: {}) {
   const curationList = await getCurationUsingCookie();
@@ -25,12 +27,20 @@ export default async function CurationList({}: {}) {
 
   return (
     <>
-      <div className="w-full max-w-[450px] mx-auto space-y-3">
+      <div className="w-full max-w-[450px] min-h-full mx-auto space-y-3">
         {curationList.map((song, i) => {
           return (
             <SongLineItem {...song} key={i} action="remove-from-curation" />
           );
         })}
+
+        {curationList.length > 0 ? (
+          <div className="left-0 right-0 absolute bottom-10">
+            <div className="mx-auto w-fit">
+              <GenerateButton />
+            </div>
+          </div>
+        ) : null}
       </div>
     </>
   );
