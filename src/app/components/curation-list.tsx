@@ -26,7 +26,7 @@ export default async function CurationList({}: {}) {
 
   return (
     <>
-      <div className="w-full max-w-[450px] min-h-full mx-auto space-y-3">
+      <div className="w-full max-w-[450px] h-full mx-auto space-y-3">
         {curationList.map((song, i) => {
           return (
             <SongLineItem {...song} key={i} action="remove-from-curation" />
@@ -34,8 +34,8 @@ export default async function CurationList({}: {}) {
         })}
 
         {curationList.length > 0 ? (
-          <div className="left-0 right-0 absolute bottom-10">
-            <div className="mx-auto w-fit">
+          <div className="z-10 left-0 right-0 absolute bottom-10">
+            <div className="z-10 mx-auto w-fit">
               <GenerateButton />
             </div>
           </div>

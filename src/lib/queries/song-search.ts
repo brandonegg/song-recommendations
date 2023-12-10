@@ -130,6 +130,9 @@ export async function findByIds(ids: string[]) {
     "ft.search",
     "songs_index",
     `@id:${ids.join("|")}`,
+    "LIMIT",
+    0,
+    10000,
   );
 
   const results = parseSongQueryResults(result);
