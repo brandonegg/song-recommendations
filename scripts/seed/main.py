@@ -8,6 +8,5 @@ if __name__ == "__main__":
     print("Redis seeding complete!")
 
     print("Creating neo4j song nodes...")
-    remove_song_nodes()
     create_song_nodes()
     print("Neo4J seeding complete!")
