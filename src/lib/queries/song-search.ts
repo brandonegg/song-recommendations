@@ -1,11 +1,19 @@
 import redis from "@/lib/redis";
-import {
-  SearchResponse,
-  SearchResponseSchema,
-} from "../schemas/responses/search";
+import { z } from "zod";
 
 const MAX_LEV = 3;
 const LIMIT = 10;
+
+export const SongDetailsSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  artists: z.array(z.string()),
+  artist_ids: z.array(z.string()),
+  album: z.string(),
+  album_id: z.string(),
+});
+
+export type SongDetails = z.infer<typeof SongDetailsSchema>;
 
 const makeConditionalString = (input: string, levDist: number) => {
   return input
@@ -19,12 +27,30 @@ const makeConditionalString = (input: string, levDist: number) => {
     .join("|");
 };
 
+function parseSongQueryResults(result: unknown) {
+  return (result as unknown[])
+    .slice(1)
+    .filter((_, i) => {
+      return i % 2 !== 0; // ignore even indices = object key
+    })
+    .map((item) => {
+      const { artists, artist_ids, ...object } = JSON.parse(
+        (item as string[])[1],
+      );
+
+      return {
+        ...object,
+        artists: artists.split(", "),
+        artist_ids: artist_ids.split(", "),
+      };
+    });
+}
+
 const searchNameArtist = async (
   levDist: number,
   limit: number,
   query: string,
 ) => {
-  console.log(`@name|artists:(${makeConditionalString(query, levDist)}`);
   const result = await redis.call(
     "ft.search",
     "songs_index",
@@ -36,22 +62,7 @@ const searchNameArtist = async (
 
   try {
     const count = (result as number[])[0]!;
-    const results = (result as unknown[])
-      .slice(1)
-      .filter((_, i) => {
-        return i % 2 !== 0; // ignore even indices = object key
-      })
-      .map((item) => {
-        const { artists, artist_ids, ...object } = JSON.parse(
-          (item as string[])[1],
-        );
-
-        return {
-          ...object,
-          artists: artists.split(", "),
-          artist_ids: artist_ids.split(", "),
-        };
-      });
+    const results = parseSongQueryResults(result);
 
     return { count, results };
   } catch {
@@ -64,7 +75,7 @@ const searchNameArtist = async (
 
 export const searchSongs = async (query: string, limit: number) => {
   query = query.trim();
-  const results: SearchResponse["results"] = [];
+  const results: SongDetails[] = [];
 
   if (query.length === 0) {
     return {
@@ -82,8 +93,24 @@ export const searchSongs = async (query: string, limit: number) => {
     }
   }
 
-  return SearchResponseSchema.parse({
-    count: results.length,
-    results: results,
-  });
+  return z
+    .object({
+      count: z.number(),
+      results: z.array(SongDetailsSchema),
+    })
+    .parse({
+      count: results.length,
+      results: results,
+    });
 };
+
+export async function findByIds(ids: string[]) {
+  const result = await redis.call(
+    "ft.search",
+    "songs_index",
+    `@id:${ids.join("|")}`,
+  );
+
+  const results = parseSongQueryResults(result);
+  return z.array(SongDetailsSchema).parse(results);
+}

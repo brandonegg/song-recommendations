@@ -1,40 +1,47 @@
-import { SearchResponse } from "@/lib/schemas/responses/search";
 import { MusicalNoteIcon, UserIcon } from "@heroicons/react/24/outline";
+import { PlusCircleIcon } from "@heroicons/react/24/solid";
 import { PropsWithChildren } from "react";
+import { addSongToCuration } from "../actions/add-to-curation";
+import { SongDetails } from "@/lib/queries/song-search";
 
 export const SongLineItem = ({
   showAddToCuration,
   name,
   artists,
   album,
+  id,
 }: {
   showAddToCuration: boolean;
-} & SearchResponse["results"][0]) => {
-  const ConditionalButton = ({ children }: PropsWithChildren) => {
-    // if (onClick) {
-    //   return (
-    //     <button
-    //       className="overflow-hidden border hover:border-white/50 border-transparent relative group rounded-2xl w-full hover:bg-white/50 transition-all duration-100"
-    //       onClick={onClick}
-    //     >
-    //       <div className="z-10 hidden group-hover:block absolute inset-0">
-    //         <div className="grid place-items-center w-full h-full">
-    //           <div className="w-fit flex flex-row items-center space-x-2">
-    //             <p className="text-blue-900/75 font-bold">add to curation</p>
-    //             <PlusCircleIcon className="w-5 h-5 text-blue-900/75" />
-    //           </div>
-    //         </div>
-    //       </div>
-    //       <div className="group-hover:blur-[4px]">{children}</div>
-    //     </button>
-    //   );
-    // }
+} & SongDetails) => {
+  const ConditionalForm = ({ children }: PropsWithChildren) => {
+    if (showAddToCuration) {
+      return (
+        <form action={addSongToCuration}>
+          <input readOnly className="hidden" type="text" name="id" value={id} />
+
+          <button
+            type="submit"
+            className="overflow-hidden border hover:border-white/50 border-transparent relative group rounded-2xl w-full hover:bg-white/50 transition-all duration-100"
+          >
+            <div className="z-10 hidden group-hover:block absolute inset-0">
+              <div className="grid place-items-center w-full h-full">
+                <div className="w-fit flex flex-row items-center space-x-2">
+                  <p className="text-blue-900/75 font-bold">add to curation</p>
+                  <PlusCircleIcon className="w-5 h-5 text-blue-900/75" />
+                </div>
+              </div>
+            </div>
+            <div className="group-hover:blur-[4px]">{children}</div>
+          </button>
+        </form>
+      );
+    }
 
     return <>{children}</>;
   };
 
   return (
-    <ConditionalButton>
+    <ConditionalForm>
       <div className="w-full bg-gray-100/10 px-4 py-2 rounded-2xl flex flex-row justify-between items-center">
         <div className="flex flex-row items-center space-x-4">
           <MusicalNoteIcon className="h-[25px] text-gray-300" />
@@ -49,6 +56,6 @@ export const SongLineItem = ({
           <p className="text-sm text-gray-100/75">{artists[0] ?? "None"}</p>
         </div>
       </div>
-    </ConditionalButton>
+    </ConditionalForm>
   );
 };

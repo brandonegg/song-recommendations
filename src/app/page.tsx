@@ -1,8 +1,8 @@
 import { Suspense } from "react";
 import { SearchBar } from "./components/search-bar";
-import { CurationSidebar } from "./components/curation-sidebar";
 import { LoadingSpinner } from "./components/loading-spinner";
 import ResultList from "./components/result-list";
+import { CurationSidebar } from "./components/curation-sidebar";
 
 export default function Home({
   searchParams,
