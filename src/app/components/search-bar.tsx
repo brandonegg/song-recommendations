@@ -1,4 +1,5 @@
 "use client";
+import { useDebouncedCallback } from 'use-debounce';
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
@@ -15,7 +16,7 @@ export const SearchBar = () => {
   const pathname = usePathname();
   const { replace } = useRouter();
 
-  const handleSearch = (input: string) => {
+  const handleSearch = useDebouncedCallback((input: string) => {
     const params = new URLSearchParams(searchParams);
     if (input) {
       params.set("query", input);
@@ -23,7 +24,7 @@ export const SearchBar = () => {
       params.delete("query");
     }
     replace(`${pathname}?${params.toString()}`);
-  };
+  }, 300);
 
   return (
     <div className="relative mx-2">
