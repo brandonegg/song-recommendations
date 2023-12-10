@@ -13,7 +13,7 @@ export async function getSimilarSongs() {
     return [];
   }
 
-  const results: unknown[] = []
+  const results: unknown[] = [];
 
   var session = neo4jDriver.session({
     defaultAccessMode: neo4j.session.READ,
@@ -34,16 +34,24 @@ export async function getSimilarSongs() {
       results.push({
         id: record.get("id"),
         name: record.get("name"),
-        artists: record.get("artists").slice(1,-1).split(', ').map((input: string) => input.slice(1,-1)),
-        artist_ids: record.get("artist_ids").slice(1,-1).split(', ').map((input: string) => input.slice(1,-1)),
+        artists: record
+          .get("artists")
+          .slice(1, -1)
+          .split(", ")
+          .map((input: string) => input.slice(1, -1)),
+        artist_ids: record
+          .get("artist_ids")
+          .slice(1, -1)
+          .split(", ")
+          .map((input: string) => input.slice(1, -1)),
         album: record.get("album"),
         album_id: record.get("album_id"),
       });
-    })
+    });
   } catch (e) {
     // do no harm
   }
 
-  await session.close()
-  return z.array(SongDetailsSchema).parse(results)
+  await session.close();
+  return z.array(SongDetailsSchema).parse(results);
 }

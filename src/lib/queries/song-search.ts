@@ -96,16 +96,20 @@ export const searchSongs = async (query: string, limit: number) => {
   }
 
   for (let i = 0; i < MAX_LEV; i++) {
-    const redisMatches = await searchNameArtist(
-      i,
-      LIMIT,
-      query ?? "",
-      ignoreIds,
-    );
-    const newLen = results.push(...redisMatches.results);
+    try {
+      const redisMatches = await searchNameArtist(
+        i,
+        LIMIT,
+        query ?? "",
+        ignoreIds,
+      );
+      const newLen = results.push(...redisMatches.results);
 
-    if (newLen >= LIMIT) {
-      break;
+      if (newLen >= LIMIT) {
+        break;
+      }
+    } catch {
+      // do no harm
     }
   }
 
