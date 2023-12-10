@@ -1,35 +1,34 @@
 import { SearchResponse } from "@/lib/schemas/responses/search";
-import { PlusCircleIcon } from "@heroicons/react/20/solid";
 import { MusicalNoteIcon, UserIcon } from "@heroicons/react/24/outline";
 import { PropsWithChildren } from "react";
 
 export const SongLineItem = ({
-  onClick,
+  showAddToCuration,
   name,
   artists,
   album,
 }: {
-  onClick: (() => void) | undefined;
+  showAddToCuration: boolean;
 } & SearchResponse["results"][0]) => {
   const ConditionalButton = ({ children }: PropsWithChildren) => {
-    if (onClick) {
-      return (
-        <button
-          className="overflow-hidden border hover:border-white/50 border-transparent relative group rounded-2xl w-full hover:bg-white/50 transition-all duration-100"
-          onClick={onClick}
-        >
-          <div className="z-10 hidden group-hover:block absolute inset-0">
-            <div className="grid place-items-center w-full h-full">
-              <div className="w-fit flex flex-row items-center space-x-2">
-                <p className="text-blue-900/75 font-bold">add to curation</p>
-                <PlusCircleIcon className="w-5 h-5 text-blue-900/75" />
-              </div>
-            </div>
-          </div>
-          <div className="group-hover:blur-[4px]">{children}</div>
-        </button>
-      );
-    }
+    // if (onClick) {
+    //   return (
+    //     <button
+    //       className="overflow-hidden border hover:border-white/50 border-transparent relative group rounded-2xl w-full hover:bg-white/50 transition-all duration-100"
+    //       onClick={onClick}
+    //     >
+    //       <div className="z-10 hidden group-hover:block absolute inset-0">
+    //         <div className="grid place-items-center w-full h-full">
+    //           <div className="w-fit flex flex-row items-center space-x-2">
+    //             <p className="text-blue-900/75 font-bold">add to curation</p>
+    //             <PlusCircleIcon className="w-5 h-5 text-blue-900/75" />
+    //           </div>
+    //         </div>
+    //       </div>
+    //       <div className="group-hover:blur-[4px]">{children}</div>
+    //     </button>
+    //   );
+    // }
 
     return <>{children}</>;
   };

@@ -1,7 +1,6 @@
 "use client";
-
-import { useState } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export const SearchButton = () => {
   return (
@@ -11,18 +10,28 @@ export const SearchButton = () => {
   );
 };
 
-export const SearchBar = ({
-  onChange,
-  value,
-}: {
-  onChange: React.ChangeEventHandler<HTMLInputElement>;
-  value: string;
-}) => {
+export const SearchBar = () => {
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const { replace } = useRouter();
+
+  const handleSearch = (input: string) => {
+    const params = new URLSearchParams(searchParams);
+    if (input) {
+      params.set("query", input);
+    } else {
+      params.delete("query");
+    }
+    replace(`${pathname}?${params.toString()}`);
+  };
+
   return (
     <div className="relative mx-2">
       <input
-        value={value}
-        onChange={onChange}
+        defaultValue={searchParams.get("query")?.toString()}
+        onChange={(e) => {
+          handleSearch(e.target.value);
+        }}
         type="text"
         placeholder="Search for a song or artist"
         className="bg-gray-100/20 text-white placeholder:text-gray-100/40 text-sm w-[500px] rounded-xl px-4 py-3 border border-white/50"

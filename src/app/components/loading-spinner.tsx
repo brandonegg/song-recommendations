@@ -1,8 +1,7 @@
 export const LoadingSpinner = () => {
   return (
-    <div className="lds-ripple">
-      <div></div>
-      <div></div>
+    <div className="w-full grid place-items-center">
+      <span className="loader" />
     </div>
   );
 };
