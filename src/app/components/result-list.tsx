@@ -5,7 +5,7 @@ export default async function ResultList({ query }: { query: string }) {
   const search = await searchSongs(query, 10);
 
   return (
-    <>
+    <div>
       {query.length > 0 ? (
         <div className="h-[1px] mx-auto w-full max-w-[300px] bg-gray-100/10" />
       ) : null}
@@ -23,6 +23,6 @@ export default async function ResultList({ query }: { query: string }) {
           })}
         </div>
       )}
-    </>
+    </div>
   );
 }
